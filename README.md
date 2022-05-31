@@ -10,11 +10,10 @@ a small Raspberry Pi 4 and have it serve as both a DHCP and DNS
 authoritative server.
 
 ## Install RHEL on the Pi
-My colleague Paul Armstrong outlines the [required
-steps](https://github.com/parmstro/94Pi4/wiki/Manual-Deployment-Method). In
-a nutshell, you'll make sure that the RPi 4 has the latest bootloader
-firmware, then you'll format a small FAT32 partition on the SD-card
-for the [upstream RPi 4 UEFI firwmare](https://github.com/pftf/RPi4/releases),
+My colleague Paul Armstrong outlines the [required steps](https://github.com/parmstro/94Pi4/wiki/Manual-Deployment-Method).
+In a nutshell, you'll make sure that the RPi 4 has the latest
+bootloader firmware, then you'll format a small FAT32 partition on
+the SD-card for the [upstream RPi 4 UEFI firwmare](https://github.com/pftf/RPi4/releases),
 and then finally you'll perform a standard installation of RHEL 9
 from USB. Paul does an excellent job explaining these steps.
 
