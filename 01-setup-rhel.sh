@@ -50,7 +50,7 @@ firewall-cmd --reload
 dnf -y install insights-client
 
 # set credentials in the client configuration file
-sed -i 's/^\(#username=\)/\1'$USERNAME'/g' /etc/insights-client/insights-client.conf
+sed -i.bak 's/^\(#username=\)/\1'$USERNAME'/g' /etc/insights-client/insights-client.conf
 sed -i 's/^\(#password=\)/\1'$PASSWORD'/g' /etc/insights-client/insights-client.conf
 
 insights-client --register
