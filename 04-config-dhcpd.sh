@@ -33,7 +33,7 @@ subnet $SUBNET.0 netmask $NETMASK {
 #
 # host server.$DOMAIN {
 # 	hardware ethernet 52:54:00:72:2f:6e;
-# 	fixed-address $SUBNET.100;
+# 	fixed-address $SUBNET.201;
 # }
 EOF
 
