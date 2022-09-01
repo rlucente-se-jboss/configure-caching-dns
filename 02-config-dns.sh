@@ -57,9 +57,9 @@ cat > /var/named/$DOMAIN.zone <<EOF
 ns1.$DOMAIN.                IN A    $HOSTIP
 nfs.$DOMAIN.                IN A    $SUBNET.90
 
-api.$CLUSTER.$DOMAIN.       IN A    $SUBNET.100
-api-int.$CLUSTER.$DOMAIN.   IN A    $SUBNET.100
-*.apps.$CLUSTER.$DOMAIN.    IN A    $SUBNET.100
+api.$CLUSTER.$DOMAIN.       IN A    $SUBNET.201
+api-int.$CLUSTER.$DOMAIN.   IN A    $SUBNET.201
+*.apps.$CLUSTER.$DOMAIN.    IN A    $SUBNET.201
 
 master0.$CLUSTER.$DOMAIN    IN A    $SUBNET.80
 master1.$CLUSTER.$DOMAIN    IN A    $SUBNET.81
@@ -89,8 +89,8 @@ cat > /var/named/$DOMAIN.rzone <<EOF
 $DNSIP.$REV_SUBNET.in-addr.arpa.    IN  PTR ns1.$DOMAIN.
 90.$REV_SUBNET.in-addr.arpa.        IN  PTR nfs.$DOMAIN.
 
-100.$REV_SUBNET.in-addr.arpa.   IN	PTR	api.$CLUSTER.$DOMAIN.
-100.$REV_SUBNET.in-addr.arpa.   IN	PTR	api-int.$CLUSTER.$DOMAIN.
+201.$REV_SUBNET.in-addr.arpa.   IN	PTR	api.$CLUSTER.$DOMAIN.
+201.$REV_SUBNET.in-addr.arpa.   IN	PTR	api-int.$CLUSTER.$DOMAIN.
 80.$REV_SUBNET.in-addr.arpa.    IN  PTR master0.$CLUSTER.$DOMAIN.
 81.$REV_SUBNET.in-addr.arpa.    IN  PTR master1.$CLUSTER.$DOMAIN.
 82.$REV_SUBNET.in-addr.arpa.    IN  PTR master2.$CLUSTER.$DOMAIN.
