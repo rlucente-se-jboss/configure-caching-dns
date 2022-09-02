@@ -22,6 +22,7 @@ default-lease-time 86400;
 authoritative;
 
 subnet $SUBNET.0 netmask $NETMASK {
+  interface $ETHDEV;
   range $DHCP_MIN $DHCP_MAX;
   option domain-name-servers $HOSTIP;
   option routers $GATEWAY;
@@ -36,6 +37,13 @@ subnet $SUBNET.0 netmask $NETMASK {
 # 	fixed-address $SUBNET.201;
 # }
 EOF
+
+##
+## set interfaces for requests
+##
+sed -i 's/^#\(DHCPDv4_CONF\)/\1/g' /etc/default/isc-dhcp-server
+sed -i 's/^\(INTERFACESv4=\)..*/\1"'$ETHDEV'"/g' /etc/default/isc-dhcp-server
+sed -i 's/^\(INTERFACESv6=..*\)/\#\1/g' /etc/default/isc-dhcp-server
 
 ##
 ## enable the service to start at boot time
