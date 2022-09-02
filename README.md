@@ -15,7 +15,7 @@ the available connections using:
 
     nmcli con show
 
-If the `NAME` field resembles `Wired Connection 1` then you'll need
+If the `NAME` field resembles `Wired connection 1` then you'll need
 to change it. On my system, I rename it the same as the ethernet
 device `eth0`. To do that, use:
 
