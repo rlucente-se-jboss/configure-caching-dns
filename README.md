@@ -8,7 +8,24 @@ running Armbian laying around to use. So, here are the instructions
 to configure the Quadra as both a DHCP and DNS authoritative server.
 
 ## Configure the server
-To begin, copy or clone this repository to your server.
+To begin, copy or clone this repository to your server. Make sure
+that the ethernet connection name does not contain any spaces as
+this will cause untold issues with the scripts. To do this, list
+the available connections using:
+
+    nmcli con show
+
+If the `NAME` field resembles `Wired Connection 1` then you'll need
+to change it. On my system, I rename it the same as the ethernet
+device `eth0`. To do that, use:
+
+    nmcli con mod Wired\ connection\ 1 connection.id eth0
+
+Rerun the command to list the available connections. The output
+should now resemble the following:
+
+    NAME  UUID         TYPE      DEVICE
+    etho  c6d13973-... ethernet  eth0
 
 ### Review the configuration file and scripts
 Review all of the parameters in the `demo.conf` file as well as the
