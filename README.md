@@ -1,7 +1,7 @@
 # Simple DHCP and authoritative DNS for a home network
 An OpenShift cluster requires several DNS entries external to the
-cluster. There are many ways to meet this requirement include cloud
-services like AWS' Route53. This project establishes a local
+cluster. There are many ways to meet this requirement including
+cloud services like AWS' Route53. This project establishes a local
 authoritative DNS server on a home network. Why go that route? (heh,
 pun intended). Well, I have a low cost Inovato Quadra Arm device
 running Armbian laying around to use. So, here are the instructions
@@ -31,7 +31,7 @@ and IPv4 address assignments as needed.
     sudo ./02-config-dns.sh
 
 Make sure that the names and IPv4 addresses in the test script match
-your assignements and then verify that the DNS server is working
+your assignments and then verify that the DNS server is working
 correctly.
 
     ./03-test-dns.sh
