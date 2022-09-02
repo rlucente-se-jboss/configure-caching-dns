@@ -25,7 +25,7 @@ Rerun the command to list the available connections. The output
 should now resemble the following:
 
     NAME  UUID         TYPE      DEVICE
-    etho  c6d13973-... ethernet  eth0
+    eth0  c6d13973-... ethernet  eth0
 
 ### Review the configuration file and scripts
 Review all of the parameters in the `demo.conf` file as well as the
