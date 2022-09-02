@@ -8,7 +8,7 @@
 ## install packages
 ##
 
-dnf -y install dhcp-server
+apt install -y isc-dhcp-server
 
 ##
 ## create the DHCP server configuration file
@@ -38,21 +38,8 @@ subnet $SUBNET.0 netmask $NETMASK {
 EOF
 
 ##
-## allow DHCP request through firewall
-##
-
-firewall-cmd --permanent --add-service=dhcp
-firewall-cmd --reload
-
-##
-## fix SELinux settings
-##
-
-restorecon -vFr /etc/dhcp
-
-##
 ## enable the service to start at boot time
 ##
 
-systemctl enable --now dhcpd
+systemctl enable --now isc-dhcp-server
 

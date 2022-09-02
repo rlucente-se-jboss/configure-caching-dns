@@ -8,7 +8,7 @@
 ## install packages
 ##
 
-dnf -y install bind bind-utils
+apt -y install bind9 bind9-utils ufw
 
 ##
 ## set hostname and static IPv4 settings
@@ -20,18 +20,26 @@ hostnamectl set-hostname ns1.$DOMAIN
 ## create zones file
 ##
 
-cat > /etc/named/$DOMAIN.zones <<EOF
+cat > /etc/bind/$DOMAIN.zones <<EOF
 //forward zone
 zone "$DOMAIN" IN {
 	type master;
-	file "$DOMAIN.zone";
+	file "/etc/bind/$DOMAIN.zone";
 };
 
 //backward zone
 zone "$REV_SUBNET.in-addr.arpa" IN {
 	type master;
-	file "$DOMAIN.rzone";
+	file "/etc/bind/$DOMAIN.rzone";
 };
+EOF
+
+##
+## include our tailored zones file
+##
+
+cat > /etc/bind/named.conf.local <<EOF
+include "/etc/bind/$DOMAIN.zones";
 EOF
 
 ##
@@ -43,7 +51,7 @@ EOF
 ## also addan NFS server. Again, adjust for your needs.
 ##
 
-cat > /var/named/$DOMAIN.zone <<EOF
+cat > /etc/bind/$DOMAIN.zone <<EOF
 \$TTL    86400
 @	IN	SOA	ns1.$DOMAIN.	root (
 		2022052800 ; serial
@@ -75,7 +83,7 @@ EOF
 
 DNSIP=$(echo $HOSTIP | cut -d. -f4)
 
-cat > /var/named/$DOMAIN.rzone <<EOF
+cat > /etc/bind/$DOMAIN.rzone <<EOF
 \$TTL    86400
 @	IN	SOA	ns1.$DOMAIN.	root (
 		1997022700 ; serial
@@ -96,44 +104,41 @@ $DNSIP.$REV_SUBNET.in-addr.arpa.    IN  PTR ns1.$DOMAIN.
 82.$REV_SUBNET.in-addr.arpa.    IN  PTR master2.$CLUSTER.$DOMAIN.
 EOF
 
-##
-## modify /etc/named.conf
-##
-
-grep "$DOMAIN.zones" /etc/named.conf &> /dev/null || \
-    echo "include \"/etc/named/$DOMAIN.zones\";" >> /etc/named.conf
-
 # remove directives for listen-on and allow-query but realize that
 # when these are missing, queries are allowed on any interface by
 # anyone. Also, set forwarders for domains where this server is not
 # authoritative.
 
-sed -Ei '/.+listen-on.+/d' /etc/named.conf
-sed -Ei '/.+allow-query.+/d' /etc/named.conf
-grep '^forwarders ' /etc/named.conf &> /dev/null || \
-    sed -Ei "/^options.+/a forwarders { $FWD_DNS; };" /etc/named.conf
+sed -Ei '/.+listen-on.+/d' /etc/bind/named.conf.options
+sed -Ei '/.+allow-query.+/d' /etc/bind/named.conf.options
+grep '^forwarders ' /etc/bind/named.conf.options &> /dev/null || \
+    sed -Ei "/^options.+/a forwarders { $FWD_DNS; };" \
+        /etc/bind/named.conf.options
 
 ##
 ## secure permissions on zone files
 ##
 
-chown root:named /var/named/$DOMAIN.zone /var/named/$DOMAIN.rzone
-chmod 640 /var/named/$DOMAIN.zone /var/named/$DOMAIN.rzone
-restorecon -vFr /etc/named.conf /etc/named /var/named
+chown root:bind /etc/bind/$DOMAIN.zone /etc/bind/$DOMAIN.rzone
+chmod 0640 /etc/bind/$DOMAIN.zone /etc/bind/$DOMAIN.rzone
 
 ##
-## update firewall rules to allow DNS queries
+## update firewall rules to allow DNS, SSH, and DHCP
 ##
 
-firewall-cmd --permanent --add-service=dns
-firewall-cmd --reload
+ufw disable
+ufw default deny incoming
+ufw allow bootps
+ufw allow domain
+ufw allow ssh
+ufw enable
 
 ##
 ## enable and start the DNS server
 ##
 
-named-checkzone $DOMAIN /var/named/$DOMAIN.zone
-named-checkzone $REV_SUBNET.in-addr.arpa /var/named/$DOMAIN.rzone
+named-checkzone $DOMAIN /etc/bind/$DOMAIN.zone
+named-checkzone $REV_SUBNET.in-addr.arpa /etc/bind/$DOMAIN.rzone
 
 systemctl enable --now named
 systemctl status named --no-pager -l

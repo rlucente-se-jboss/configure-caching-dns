@@ -3,52 +3,30 @@ An OpenShift cluster requires several DNS entries external to the
 cluster. There are many ways to meet this requirement include cloud
 services like AWS' Route53. This project establishes a local
 authoritative DNS server on a home network. Why go that route? (heh,
-pun intended). Well, I have a Raspberry Pi 4 laying around and,
-with the newer 5.x kernel in Red Hat Enterprise Linux 9, this was
-trivial to do. So, here are the instructions to install RHEL 9 on
-a small Raspberry Pi 4 and have it serve as both a DHCP and DNS
-authoritative server.
-
-## Install RHEL on the Pi
-My colleague Paul Armstrong outlines the [required steps](https://github.com/parmstro/94Pi4/wiki/Manual-Deployment-Method).
-In a nutshell, you'll make sure that the RPi 4 has the latest
-bootloader firmware, then you'll format a small FAT32 partition on
-the SD-card for the [upstream RPi 4 UEFI firwmare](https://github.com/pftf/RPi4/releases),
-and then finally you'll perform a standard installation of RHEL 9
-from USB. Paul does an excellent job explaining these steps.
-
-For this project, you can start with a `minimal` RHEL installation
-and DHCP for the IP configuration. These instructions focus on
-non-routable IPv4 addresses, so you can ignore IPv6 configuration
-when going through the operating system installation.
+pun intended). Well, I have a low cost Inovato Quadra Arm device
+running Armbian laying around to use. So, here are the instructions
+to configure the Quadra as both a DHCP and DNS authoritative server.
 
 ## Configure the server
-Once you have RHEL installed, remove the USB media and reboot the
-system. You're now ready to configure the various services.
-
 To begin, copy or clone this repository to your server.
 
 ### Review the configuration file and scripts
-Make sure to change the `USERNAME` and `PASSWORD` parameters in the
-`demo.conf` file. I strongly recommend reviewing all of the remaining
-parameters in that file as well as the scripts. A `/24` network
-mask is assumed and values are pre-selected for DNS entries and
-IPv4 address assignments. Make sure that these all match your
-requirements.
+Review all of the parameters in the `demo.conf` file as well as the
+scripts. A `/24` network mask is assumed and values are pre-selected
+for DNS entries and IPv4 address assignments. Make sure that these
+all match your requirements.
 
-### Register for updates and insights
-Run the first script to register the system with the Red Hat
-Subscription Manager and Insights. This will also apply any package
-updates.
+### Make sure system is up to date
+Run the first script to apply any package updates.
 
-    sudo ./01-setup-rhel.sh
+    sudo ./01-setup.sh
 
 Make sure to reboot if there were any kernel updates applied.
 
 ### Configure the DNS authoritative server
 Before running, make sure that the script configures the forward/reverse
 zone files to meet your needs. You can add additional host names
-an IPv4 address assignments as needed.
+and IPv4 address assignments as needed.
 
     sudo ./02-config-dns.sh
 
@@ -73,6 +51,6 @@ configuration tooling so it's not covered here. Restart your router
 for the changes to take effect.
 
 ## Summary
-And that's it. You'll now have a small RPi4 running RHEL 9 and
-acting as your local DHCP and authoritative DNS server.
+And that's it. You'll now have a small low cost Arm device acting
+as your local DHCP and authoritative DNS server.
 
